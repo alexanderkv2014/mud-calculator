@@ -1,6 +1,7 @@
 # Phase 1 — Quality Foundation
 
 Добавлено:
+
 - `typecheck`: строгая проверка TypeScript без сборки.
 - `lint`: ESLint.
 - `format:check`: проверка форматирования без изменения файлов.

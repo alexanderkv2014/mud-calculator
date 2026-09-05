@@ -82,7 +82,13 @@ export function OwrModule() {
           <Field label="Масло по реторте, %" value={s.oil} onChange={f("oil")} />
           <Field label="Плотность масла, г/см³" value={s.oilSg} onChange={f("oilSg")} />
           <Field label="Плотность желаемая, г/см³" value={s.rhoTarget} onChange={f("rhoTarget")} />
-          <Field label="ВНО желаемое" type="text" value={s.target} onChange={f("target")} placeholder="70/30" />
+          <Field
+            label="ВНО желаемое"
+            type="text"
+            value={s.target}
+            onChange={f("target")}
+            placeholder="70/30"
+          />
         </>
       }
       results={<Results state={state} />}

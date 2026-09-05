@@ -34,7 +34,11 @@ export const CURRENT_CONC_IDS: { key: string; label: string; material: string }[
   { key: "barite", label: "Барит уже в растворе, кг/м³", material: "Барит - 4.20 г/см³" },
   { key: "chalk", label: "Мел уже в растворе, кг/м³", material: "Мел - 2.70 г/см³" },
   { key: "kcl", label: "KCl уже в растворе, кг/м³", material: "Калий хлор - 1.984 г/см³" },
-  { key: "nacl", label: "NaCl/галит уже в растворе, кг/м³", material: "Натрий хлор / Галит - 2.16 г/см³" },
+  {
+    key: "nacl",
+    label: "NaCl/галит уже в растворе, кг/м³",
+    material: "Натрий хлор / Галит - 2.16 г/см³",
+  },
   { key: "cacl2", label: "CaCl2 уже в растворе, кг/м³", material: "Кальций хлор - 2.15 г/см³" },
   { key: "bentonite", label: "Бентонит уже в растворе, кг/м³", material: "Бентонит - 2.60 г/см³" },
 ];
@@ -60,7 +64,8 @@ export function calcOwr(i: {
   if (water < 0 || oil < 0 || water + oil <= 0 || water + oil > 100)
     throw new CalcError("Проверь масло/воду по реторте");
   const [targetOil, targetWater] = parseRatio(i.target);
-  if (targetOil <= 0 || targetOil >= 1) throw new CalcError("ВНО должно быть реальным, например 70/30");
+  if (targetOil <= 0 || targetOil >= 1)
+    throw new CalcError("ВНО должно быть реальным, например 70/30");
 
   const Vw = (V * water) / 100;
   const Vo = (V * oil) / 100;
@@ -82,7 +87,9 @@ export function calcOwr(i: {
 
   const warnings: string[] = [];
   if (numerator <= 0)
-    warnings.push("После жидкой корректировки плотность уже не ниже целевой — утяжелитель не нужен.");
+    warnings.push(
+      "После жидкой корректировки плотность уже не ниже целевой — утяжелитель не нужен.",
+    );
   if (1000 * rhoTarget >= 2700)
     warnings.push("Целевая плотность близка к плотности мела — утяжеление мелом нереалистично.");
 
@@ -211,7 +218,11 @@ export function calcWeight(i: {
       m("Объем добавки", fmt(addVol, 3), "м³"),
       m("Итоговый объем", fmt(finalVol, 3), "м³"),
       m("Конц. после", fmt(finalConc, 1), "кг/м³"),
-      m("Запас подъема", availableDelta === null ? "без лимита" : `+${fmt(availableDelta, 2)}`, availableDelta === null ? undefined : "г/см³"),
+      m(
+        "Запас подъема",
+        availableDelta === null ? "без лимита" : `+${fmt(availableDelta, 2)}`,
+        availableDelta === null ? undefined : "г/см³",
+      ),
     ],
     warnings,
     report: `ПОДРОБНЫЙ РАСЧЕТ: УТЯЖЕЛЕНИЕ
@@ -479,7 +490,8 @@ export function calcCuttings(i: {
   const warnings: string[] = [];
   if (cl > 0 && cl < clFromKcl + clFromCacl2)
     warnings.push("Хлоридов меньше, чем дают K⁺ и Ca²⁺ — NaCl принят равным нулю, проверь анализ.");
-  if (vSolid < known) warnings.push("Известные solids превышают твердую фазу по реторте — проверь дозировки.");
+  if (vSolid < known)
+    warnings.push("Известные solids превышают твердую фазу по реторте — проверь дозировки.");
   if (cutPct > 6) warnings.push("Выбуренная порода выше 6 % — усиль очистку.");
 
   return {
@@ -545,7 +557,13 @@ export const COMPONENTS: Record<
   "CaCl2 / Кальций хлор": { rho: 2150, kind: "salt", ca: 40.08 / 110.98, cl: 70.9 / 110.98 },
 };
 
-export type PrepRow = { id: string; comp: string; qty: string; unit: "кг всего" | "м³ всего"; rho: string };
+export type PrepRow = {
+  id: string;
+  comp: string;
+  qty: string;
+  unit: "кг всего" | "м³ всего";
+  rho: string;
+};
 
 export function calcPrep(rows: PrepRow[]): CalcResult {
   let totalMass = 0;
@@ -625,8 +643,7 @@ export function calcPrep(rows: PrepRow[]): CalcResult {
       0.00004964 * cacl2Pct ** 2;
     brineVol = brineMass / (brineSg * 1000);
   } else {
-    const saltDryVol =
-      kclMass / 1984 + naclMass / 2160 + cacl2Mass / 2150;
+    const saltDryVol = kclMass / 1984 + naclMass / 2160 + cacl2Mass / 2150;
     dryVol += saltDryVol;
     lgsVol += saltDryVol;
   }
@@ -665,7 +682,8 @@ export function calcPrep(rows: PrepRow[]): CalcResult {
       : "0/0";
   if (saltMass > 0 && waterMass <= 0) warnings.push("Есть соль без воды — она не растворится.");
   if (retortSolids > 20) warnings.push("Твердая фаза выше 20 %.");
-  if (cacl2Mass / Math.max(waterVol, 1e-9) > 300) warnings.push("CaCl₂ выше 300 кг/м³ водной фазы.");
+  if (cacl2Mass / Math.max(waterVol, 1e-9) > 300)
+    warnings.push("CaCl₂ выше 300 кг/м³ водной фазы.");
 
   return {
     metrics: [

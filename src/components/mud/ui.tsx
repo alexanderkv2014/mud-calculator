@@ -133,7 +133,10 @@ export function ReportBlock({ text }: { text: string }) {
           onClick={() => setOpen((v) => !v)}
           className="flex items-center gap-2 text-sm font-medium text-foreground transition-colors hover:text-primary"
         >
-          <ChevronDown className={cn("size-4 transition-transform", open && "rotate-180")} aria-hidden />
+          <ChevronDown
+            className={cn("size-4 transition-transform", open && "rotate-180")}
+            aria-hidden
+          />
           Подробный расчёт
         </button>
         <button
@@ -141,7 +144,11 @@ export function ReportBlock({ text }: { text: string }) {
           onClick={copy}
           className="flex items-center gap-1.5 rounded-md border border-border px-2.5 py-1.5 text-xs text-muted-foreground transition-colors hover:border-primary hover:text-primary"
         >
-          {copied ? <Check className="size-3.5" aria-hidden /> : <Copy className="size-3.5" aria-hidden />}
+          {copied ? (
+            <Check className="size-3.5" aria-hidden />
+          ) : (
+            <Copy className="size-3.5" aria-hidden />
+          )}
           {copied ? "Скопировано" : "Копировать"}
         </button>
       </div>
