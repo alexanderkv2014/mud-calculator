@@ -1,10 +1,11 @@
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import { tanstackStart } from "@tanstack/react-start/plugin/vite";
+import { nitro } from "nitro/vite";
 import tsconfigPaths from "vite-tsconfig-paths";
 import tailwindcss from "@tailwindcss/vite";
 
-export default defineConfig({
+export default defineConfig(({ command }) => ({
   plugins: [
     tailwindcss(),
     tsconfigPaths(),
@@ -13,6 +14,8 @@ export default defineConfig({
         entry: "server",
       },
     }),
+    // Nitro нужен только при сборке, как и было у Lovable
+    ...(command === "build" ? [nitro({ preset: "cloudflare-module" })] : []),
     react(),
   ],
 
@@ -42,4 +45,4 @@ export default defineConfig({
       "react/jsx-dev-runtime",
     ],
   },
-});
+}));
